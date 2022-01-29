@@ -78,8 +78,6 @@ class Grid{
     parentArr = [];
     let nextPos = snake.moveHead();
     this.createWalls(snake.body);
-    this.createWalls(snake.body);
-    this.createWalls(snake.body);
     openSet.push(grid.arr[nextPos.x][nextPos.y]);
     pelletFound = false;
     let arr = [];

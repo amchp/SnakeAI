@@ -11,7 +11,6 @@ class Node{
     this.x = n_x;
     this.y = n_y;
     this.wall = false;
-    this.allEdges = []
   }
   
   value(value){
@@ -20,34 +19,16 @@ class Node{
   
   addEdge(other){
     this.edges.push(other);
-    this.allEdges.push(other);
-  }
-  
-  removeNeighbor(other){
-    
-    for(let i = 0; i < this.edges.length; i++){
-      if(other === this.edges[i]){
-        this.edges.splice(i, 1);
-      }
-    }
   }
   
   makeWall(){
     this.wall = true;
-    this.edges.forEach((edge) => {
-      edge.removeNeighbor(this);
-    });
   }
   
   reset(){
     this.searched = false;
     this.parent = null;
     this.correct = false;
-    if(this.wall){
-      this.allEdges.forEach((edge) => {
-      edge.addEdge(this);
-    });
-    }
     this.wall = false;
   }
   

@@ -21,6 +21,7 @@ function setup() {
 }
 
 function draw() {
+  //Pelllet found move snake
   if (start && pelletFound) {
     //snake.display();
     grid.background();
@@ -32,11 +33,10 @@ function draw() {
     grid.display();
   }
   let end = grid.pellet[2];
+  //Search for pellet 
   if (start && !pelletFound) {
-    let index = Math.trunc(random(openSet.length));
-    while(openSet[index].searched){
-      index = Math.trunc(random(openSet.length));
-    }
+    //Find the best option
+    let index = 0;
     if (openSet.length > 0) {
       for (let i = 0; i < openSet.length; i++) {
         if (openSet[index].f > openSet[i].f & 
@@ -46,7 +46,6 @@ function draw() {
       }
       //Found
       if (openSet[index].index === end) {
-        print("Found");
         openSet[index].correct = true;
         parentArr = [];
         parentArr.push(openSet[index]);
@@ -62,11 +61,13 @@ function draw() {
         if (count) parentArr.pop();
         count = true;
         parIndex = parentArr.length - 1;
+        return
       }
       let current = openSet.splice(index, 1)[0];
       closedSet.push(current);
       current.searched = true;
-      current.edges.forEach((neighbor) => {
+      for(let neighbor of current.edges){
+        if (neighbor.wall)continue;
         let newNode = true;
         closedSet.forEach((alreadyDone) => {
           if (alreadyDone.index === neighbor.index) newNode = false;
@@ -74,29 +75,29 @@ function draw() {
         if (newNode) {
           let possibleG = current.g + 1;
           let passed = false;
+          let predecesor = current
           openSet.forEach((inAnotherPath) => {
             if (inAnotherPath.index === neighbor.index) {
-              if (possibleG < neighbor.g) {
-                passed = true;
-                neighbor.g = possibleG;
+              if(inAnotherPath.searched){
+                passed = true
+              }
+              if(possibleG < inAnotherPath.g) {
+                possibleG = inAnotherPath.g;
+                predecesor = inAnotherPath
               }
             }
           });
-          if (!passed) {
-            neighbor.g = possibleG;
-            openSet.push(neighbor);
-          }
-          let endPoint = grid.arr[grid.pellet[0]]
-            [grid.pellet[1]];
+          let endPoint = grid.arr[grid.pellet[0]][grid.pellet[1]];
           let distX = Math.abs(endPoint.x - neighbor.x);
           let distY = Math.abs(endPoint.y - neighbor.y);
-          let h = Math.sqrt(Math.pow(distX, 2) +
-            Math.pow(distY, 2));
+          let h = distX + distY;
           neighbor.h = h;
+          neighbor.g = possibleG
           neighbor.f = neighbor.g + neighbor.h;
-          neighbor.parent = current;
+          neighbor.parent = predecesor;
+          if(!passed)openSet.push(neighbor)
         }
-      });
+      };
     }
     if (openSet.length == 0) {
       print("No solution");
