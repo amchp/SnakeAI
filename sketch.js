@@ -28,6 +28,7 @@ function keyPressed(){
   if(gameOver){
     gameOver = false;
     grid.snake.reset()
+    grid.reset()
     grid.createPellet()
   }
 }

@@ -13,10 +13,6 @@ class Node{
     this.wall = false;
   }
   
-  value(value){
-    this.value = value;
-  }
-  
   addEdge(other){
     this.edges.push(other);
   }
@@ -26,6 +22,7 @@ class Node{
   }
   
   reset(){
+    if(this.value === 1)this.value = 0
     this.searched = false;
     this.parent = null;
     this.correct = false;
