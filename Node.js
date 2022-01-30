@@ -2,9 +2,9 @@ class Node{
   constructor(value ,index, n_x, n_y){
     this.value = value;
     this.index = index;
-    this.f = 0;
-    this.g = 0;
-    this.h = 0;
+    this.f = Infinity;
+    this.g = Infinity;
+    this.h = Infinity;
     this.parent = null;
     this.edges = [];
     this.searched = false;
@@ -30,6 +30,20 @@ class Node{
     this.parent = null;
     this.correct = false;
     this.wall = false;
+  }
+
+  updateValues(endPoint, possibleG, predecesor){
+    this.h = this.heuristic(endPoint);
+    this.g = possibleG;
+    this.f = this.h + this.g;
+    this.parent = predecesor;
+  }
+
+  heuristic(endPoint){
+    let distX = Math.abs(endPoint.x - this.x);
+    let distY = Math.abs(endPoint.y - this.y);
+    let h = distX + distY;
+    return h;
   }
   
   display(){

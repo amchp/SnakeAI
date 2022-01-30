@@ -1,16 +1,20 @@
 class Grid{
   constructor(snake, blockSize){
+    this.snake = snake
     this.rows = width/blockSize;
     this.cols = height/blockSize;
     this.arr = [this.rows];
+    this.openSet = [];
+    this.closedSet = [];
+    this.parentArr = [];
     for(let i = 0; i < this.cols; i++){
       this.arr[i] = [this.cols];
     }
     for(let i = 0; i < this.rows; i++){
-     for(let j = 0; j < this.cols; j++){
-       this.arr[i][j] = new Node(0 ,i*this.rows+j, 
-                                 i*blockSize, j*blockSize);
-     }
+      for(let j = 0; j < this.cols; j++){
+        this.arr[i][j] = new Node(0 ,i*this.rows+j, 
+                                  i*blockSize, j*blockSize);
+      }
     }
     for(let i = 0; i < this.rows; i++){
      for(let j = 0; j < this.cols; j++){
@@ -37,27 +41,27 @@ class Grid{
         }
      }
     }
-    this.passSnake(snake);
+    this.passSnake();
   }
   
-  passSnake(snake){
-    for(let i = 0; i < snake.body.length; i++){
-      if(snake.body[i].x < this.rows &&  
-         snake.body[i].x > -1 &&
-         snake.body[i].y < this.cols &&  
-         snake.body[i].y > -1){
-        this.arr[snake.body[i].x][snake.body[i].y].value=-1;
+  passSnake(){
+    for(let i = 0; i < this.snake.body.length; i++){
+      if(this.snake.body[i].x < this.rows &&  
+         this.snake.body[i].x > -1 &&
+         this.snake.body[i].y < this.cols &&  
+         this.snake.body[i].y > -1){
+        this.arr[this.snake.body[i].x][this.snake.body[i].y].value=-1;
       }
     }
   }
   
   background(){
     for(let i = 0; i < this.rows; i++){
-     for(let j = 0; j < this.cols; j++){
-       if(this.arr[i][j].value !== 1){
-         this.arr[i][j].value = 0;
-       }
-     }
+      for(let j = 0; j < this.cols; j++){
+        if(this.arr[i][j].value !== 1){
+          this.arr[i][j].value = 0;
+        }
+      }
     }
   }
   
@@ -67,26 +71,27 @@ class Grid{
   
   createWalls(walls){
     walls.forEach((node) =>{
-      grid.arr[node.x][node.y].makeWall();
+      this.arr[node.x][node.y].makeWall();
     });
   }
   
   createPellet(){
     this.reset();
-    openSet = [];
-    closedSet = [];
-    parentArr = [];
-    let nextPos = snake.moveHead();
-    this.createWalls(snake.body);
-    openSet.push(grid.arr[nextPos.x][nextPos.y]);
-    pelletFound = false;
+    this.openSet = [];
+    this.closedSet = [];
+    this.parentArr = [];
+    let nextPos = this.snake.moveHead();
+    this.createWalls(this.snake.body);
+    this.openSet.push(this.arr[nextPos.x][nextPos.y]);
+    this.arr[nextPos.x][nextPos.y].g = 1
+    this.pelletFound = false;
     let arr = [];
     for(let i = 0; i < this.rows; i++){
-     for(let j = 0; j < this.cols; j++){
-       if(this.arr[i][j].value === 0){
-          arr.push([i,j]);
-        }
-     }
+      for(let j = 0; j < this.cols; j++){
+        if(this.arr[i][j].value === 0){
+            arr.push([i,j]);
+          }
+      }
     }
 
     let ran = arr[Math.trunc(random(arr.length))];
@@ -105,12 +110,12 @@ class Grid{
   display(){
     fill(255, 0, 0);
     rect(this.pellet[0]*blockSize, this.pellet[1]*blockSize, 
-         blockSize, blockSize);
+          blockSize, blockSize);
 
     for(let i = 0; i < this.rows; i++){
-     for(let j = 0; j < this.cols; j++){
-      this.arr[i][j].display();
-     }
+      for(let j = 0; j < this.cols; j++){
+        this.arr[i][j].display();
+      }
     }
   }
 }

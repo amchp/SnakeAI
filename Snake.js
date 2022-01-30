@@ -59,6 +59,7 @@ class Snake{
   }
   
   steering(node){
+    //No truncation interesting
     let head = this.body[0];
     let x = node.x/this.squareSize;
     let y = node.y/this.squareSize;
@@ -89,7 +90,7 @@ class Snake{
       x = this.body[this.body.length - 1].x;
       y = this.body[this.body.length - 1].y - 1;
     }
-    //Going Left
+    //Going left
     if(this.body[this.body.length - 1].x < 
        this.body[this.body.length - 2].x){
       x = this.body[this.body.length - 1].x + 1;
@@ -105,7 +106,6 @@ class Snake{
   }
   
   reset(){
-    start = false;
     this.body = [];
     this.body.push({"x": width/(2*this.squareSize),
                     "y": height/(2*this.squareSize)});
