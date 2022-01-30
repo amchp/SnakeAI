@@ -106,6 +106,7 @@ class Snake{
   }
   
   reset(){
+    count = false;
     this.body = [];
     this.body.push({"x": width/(2*this.squareSize),
                     "y": height/(2*this.squareSize)});
