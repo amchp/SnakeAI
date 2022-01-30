@@ -1,6 +1,7 @@
 let grid;
 let blockSize = 10;
-let count = false
+let count = false;
+let gameOver = false;
 function setup() {
   let snake;
   let fr = 180;
@@ -9,13 +10,24 @@ function setup() {
   snake = new Snake(width / 2, height / 2,
     blockSize);
   grid = new Grid(snake, blockSize);
-  grid.passSnake(snake);
   grid.createPellet();
 }
 
 function draw() {
   //Pelllet found move snake
-  if (grid.pelletFound)pelletFound();
-  if (!grid.pelletFound)searchForPellet();
+  if(gameOver){
+    drawGameOver(); 
+    return;
+  }
+  else if(grid.pelletFound)pelletFound();
+  else if(!grid.pelletFound)searchForPellet();
   grid.display();
+}
+
+function keyPressed(){
+  if(gameOver){
+    gameOver = false;
+    grid.snake.reset()
+    grid.createPellet()
+  }
 }

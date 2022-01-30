@@ -1,6 +1,6 @@
 function searchForPellet(){
     if (grid.openSet.length == 0){
-        print("No solution");
+        gameOver = true
         return
     }
     let end = grid.pellet[2];
@@ -10,15 +10,17 @@ function searchForPellet(){
     for (let i = 0; i < grid.openSet.length; i++) {
         if(grid.openSet[i].index === end){
             found = true;
-            index = i
-            break
+            index = i;
+            break;
         }
         if (!grid.openSet[i].searched && (index === -1 || grid.openSet[i].f < grid.openSet[index].f)){ 
             index = i;
         }
     }
-    if(index == -1)print("No solution");
-    print(grid.openSet[index])
+    if(index == -1){
+        gameOver = true;
+        return;
+    }
     //Found
     if (found) {
         grid.openSet[index].correct = true;
@@ -45,8 +47,8 @@ function searchForPellet(){
         if (neighbor.wall || neighbor.searched)continue;
         let possibleG = current.g + 1;
         let predecesor = current
-        grid.closedSet.forEach((inAnotherPath) => {
-            if(inAnotherPath.index === neighbor.index && possibleG < inAnotherPath.g) {
+        neighbor.edges.forEach((inAnotherPath) => {
+            if(inAnotherPath.index === neighbor.index && possibleG > inAnotherPath.g) {
                 possibleG = inAnotherPath.g;
                 predecesor = inAnotherPath
             }
@@ -65,5 +67,15 @@ function pelletFound(){
     grid.snake.collision();
     grid.snake.move();
     grid.display();
+}
+
+function drawGameOver(){
+    background("#000000")
+    strokeWeight(1)
+    fill('#FFFFFF');
+    textSize(48);
+    text("Game Over", 65, 200)
+    textSize(24);
+    text("Press any key to restart", 65, 225)
 }
 
